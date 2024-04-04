@@ -24,4 +24,8 @@ export class TestLogger implements ILogger {
     warn(msg: string | object | Error, ...args: any[]) {
         // nothing to log
     }
+
+    flush(): Promise<void> {
+        return Promise.resolve();
+    }
 }

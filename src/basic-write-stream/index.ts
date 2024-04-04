@@ -1,5 +1,5 @@
 // tslint:disable
-import { AddressInfo, IpcSocketConnectOpts, SocketConnectOpts, TcpSocketConnectOpts } from 'net';
+import { AddressInfo, IpcSocketConnectOpts, SocketConnectOpts, SocketReadyState, TcpSocketConnectOpts } from 'node:net';
 
 export abstract class BasicWriteStream implements NodeJS.WriteStream {
     writableEnded: boolean;
@@ -33,7 +33,7 @@ export abstract class BasicWriteStream implements NodeJS.WriteStream {
     uncork(): void {
         throw new Error('BasicWriteStream: Method not implemented.');
     }
-    destroy(error?: Error): void {
+    destroy(error?: Error): this {
         throw new Error('BasicWriteStream: Method not implemented.');
     }
     read(size?: number): string | Buffer {
@@ -114,11 +114,10 @@ export abstract class BasicWriteStream implements NodeJS.WriteStream {
         throw new Error('BasicWriteStream: Method not implemented.');
     }
 
-    end(cb?: Function): void;
-    end(buffer: Buffer, cb?: Function): void;
-    end(str: string, cb?: Function): void;
-    end(str: string, encoding?: string, cb?: Function): void;
-    end(str?: any, encoding?: any, cb?: any) {
+    end(cb?: () => void): this;
+    end(data: string | Uint8Array, cb?: () => void): this;
+    end(str: string, encoding?: BufferEncoding, cb?: () => void): this;
+    end(): this {
         throw new Error('BasicWriteStream: Method not implemented.');
     }
 
@@ -137,6 +136,9 @@ export abstract class BasicWriteStream implements NodeJS.WriteStream {
     readonly remotePort: number;
     readonly writableFinished: boolean;
     readonly writableObjectMode: boolean;
+    readonly pending: boolean;
+    readonly readyState: SocketReadyState;
+    readonly allowHalfOpen: boolean;
 
     _read(size: number): void {}
 

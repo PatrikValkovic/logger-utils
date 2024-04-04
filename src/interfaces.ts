@@ -10,6 +10,7 @@ export interface ILogger {
     info: (msg: string | object | Error, ...args: any[]) => void;
     debug: (msg: string | object | Error, ...args: any[]) => void;
     trace: (msg: string | object | Error, ...args: any[]) => void;
+    flush: () => Promise<void>;
 }
 
 export enum Level {
@@ -21,7 +22,7 @@ export enum Level {
     TRACE = 'trace',
 }
 
-interface ICustomLoggerStream<StreamType = NodeJS.WriteStream | WriteStream> {
+export interface ICustomLoggerStream<StreamType = NodeJS.WriteStream | WriteStream> {
     level: Level;
     stream: StreamType;
     enabled: boolean;

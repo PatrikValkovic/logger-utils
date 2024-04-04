@@ -64,6 +64,10 @@ export class PinoLogger implements ILogger {
         this.pino.trace(formatted, ...args);
     }
 
+    flush(): Promise<void> {
+        return new Promise((resolve, reject) => this.pino.flush((err) => (err ? reject(err) : resolve())));
+    }
+
     private useFormatters(msg) {
         return this.logFormatters.reduce((previousValue, formatter) => formatter(previousValue), msg);
     }
